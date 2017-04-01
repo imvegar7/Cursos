@@ -30,8 +30,8 @@ summary(mod)
 eij <- residuals(mod)
 
 # Boxplot for eij vs treatment
-boxplot(eij ~ punta, xlab='Punta', col='pink',
-        ylab='Residuales eij')
+boxplot(eij ~ punta, xlab='Punta', ylab='Residuales eij')
+points(x=as.numeric(punta), y=eij, pch=19, col='royalblue1')
 
 # Standarized residual vs fitted values
 par(mar=c(5.1, 5.1, 4.1, 2.1))
