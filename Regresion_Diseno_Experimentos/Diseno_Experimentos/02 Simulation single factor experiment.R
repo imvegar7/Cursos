@@ -21,6 +21,7 @@ y <- rnorm(n=N, mean=media, sd=desvi)
 
 # Treatment indicator
 treat <- rep(letters[1:a], each=n)
+treat <- as.factor(treat)
 
 # Boxplot to explore the dataset
 par(mfrow=c(2, 2))
@@ -35,3 +36,16 @@ boxplot(residuals(mod) ~ treat,
 
 plot(mod, 1)
 plot(mod, 3)
+
+# Residuals
+eij <- residuals(mod)
+
+# Bartlett test
+bartlett.test(x=eij, g=treat)
+
+# Levene test
+require(car)
+leveneTest(eij ~ treat)
+
+# Fligner-Killeen test
+fligner.test(eij ~ treat)

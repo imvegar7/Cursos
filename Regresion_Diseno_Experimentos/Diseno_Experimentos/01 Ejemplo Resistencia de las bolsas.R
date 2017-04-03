@@ -43,9 +43,22 @@ plot(x=mymodel$fitted.values, y=sqrt(abs(eij)),
      xlab='Fitted values',
      ylab='sqrt abs eij', pch=19)
 
+# Bartlett test
+bartlett.test(x=eij, g=treatment)
+
+# Levene test
+require(car)
+leveneTest(eij ~ treatment)
+
+# Fligner-Killeen test
+fligner.test(eij ~ treatment)
+
 # QQplot for eij
 qqnorm(eij, pch=19, col='dodgerblue')
 qqline(eij)
+
+# Shapiro Wilk test
+shapiro.test(eij)
 
 # Using the standard residual analysis
 par(mfrow=c(2, 2))
