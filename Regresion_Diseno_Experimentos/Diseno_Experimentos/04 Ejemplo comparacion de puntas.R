@@ -43,6 +43,24 @@ plot(x=mod$fitted.values, y=sqrt(abs(eij)),
 qqnorm(eij, pch=19, col='dodgerblue')
 qqline(eij)
 
+# Are the residuals normally distributed??????
+
+# Shapiro Wilk test
+shapiro.test(eij)
+
+# Anderson Darling test from nortest package
+require(nortest)
+ad.test(eij)
+
+# Homogeneity of variance???
+
+# Bartlett test
+bartlett.test(x=eij, g=punta)
+
+# Levene test
+require(car)
+leveneTest(eij ~ punta)
+
 # To plot the first, second and third graphs
 par(mfrow=c(2, 2))
 plot(mod, 1, pch=19)
