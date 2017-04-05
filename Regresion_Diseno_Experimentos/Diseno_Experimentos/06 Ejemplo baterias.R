@@ -24,9 +24,9 @@ material    <- factor(material)
 
 # Boxplot -----------------------------------------------------------------
 par(mfrow=c(1, 2))
-boxplot(horas~material, xlab='Material',
+boxplot(horas~material, las=1, xlab='Material',
         ylab='Duración (horas)')
-boxplot(horas~temperatura, xlab='Temperatura (°K)',
+boxplot(horas~temperatura, las=1, xlab='Temperatura (°K)',
         ylab='Duración (horas)')
 
 
@@ -36,6 +36,14 @@ interaction.plot(x.factor=temperatura,
                  trace.factor=material,
                  response=horas,
                  xlab='Temperatura',
+                 ylab='Duración promedio (horas)',
+                 col=c('green', 'black', 'red'),
+                 fun=mean, lwd=3, las=1, fixed=T)
+
+interaction.plot(x.factor=material,
+                 trace.factor=temperatura,
+                 response=horas,
+                 xlab='Material',
                  ylab='Duración promedio (horas)',
                  col=c('green', 'black', 'red'),
                  fun=mean, lwd=3, las=1, fixed=T)
