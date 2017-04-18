@@ -13,10 +13,8 @@ horas <- c(130, 155, 74, 180,   # by column
            25, 70, 58, 45,
            96, 104, 82, 60)
 
-temperatura <- c(rep(15, times=12),
-                 rep(70, times=12),
-                 rep(125, times=12))
-material    <- rep(c(rep(1, 4), rep(2, 4), rep(3, 4)), 3)
+temperatura <- rep(c(15, 70, 125), each=12)
+material    <- rep(1:3, each=4, times=3)
 
 temperatura <- factor(temperatura)
 material    <- factor(material)
