@@ -37,7 +37,7 @@ y <- outer(Areas, Habit, mu.est)
 
 # Grafico de contornos
 contour(x=Areas, y=Habit, z=y, nlevels=20,
-        lwd=1, lty='solid',
+        lwd=3, lty='solid',
         xlab='Area', ylab='No alcobas')
 
 
