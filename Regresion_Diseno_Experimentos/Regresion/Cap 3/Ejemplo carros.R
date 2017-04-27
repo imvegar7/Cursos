@@ -29,7 +29,7 @@ panel.reg <- function (x, y)
   points(x, y, pch=20)
   abline(lm(y ~ x), lwd=2, col='dodgerblue2')
 }
-# Función para crear el histograma
+# Funci?n para crear el histograma
 panel.hist <- function(x, ...)
 {
   usr <- par("usr"); on.exit(par(usr))
@@ -39,7 +39,7 @@ panel.hist <- function(x, ...)
   y <- h$counts; y <- y/max(y)
   rect(breaks[-nB], 0, breaks[-1], y, col="dodgerblue2", ...)
 }
-# Función para obtener la correlación
+# Funci?n para obtener la correlaci?n
 panel.cor <- function(x, y, digits=2, prefix="", cex.cor)
 {
   usr <- par("usr"); on.exit(par(usr))
@@ -81,6 +81,7 @@ summary(modfinal)
 
 lines(sort(datos$Weight), fitted(modfinal)[order(datos$Weight)],
       col='blue', lwd=4) 
+
 legend('topright', col=c('red', 'blue'), lty=1, bty='n',
        legend=c('Lineal', 'Cuadratico'))
 
