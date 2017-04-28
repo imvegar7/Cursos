@@ -1,90 +1,72 @@
 
-# En este script se va a replicar el ejemplo sobre entrega de refrescos
+# Pastilla electrónica ----------------------------------------------------
+
+# En este script se va a replicar el ejemplo sobre pastillas electronicas
 
 # -------------------------------------------------------------------------
 # Lectura de la base de datos ---------------------------------------------
 # -------------------------------------------------------------------------
 
-# Los datos estan disponibles en el objeto softdrink del paquete MPV
-require(MPV)
-softdrink
-datos <- softdrink
-colnames(datos) <- c('tiempo', 'cantidad', 'distancia')
+# Los datos estan disponibles en la url siguiente
+enlace <- "https://raw.githubusercontent.com/fhernanb/datos/master/pastillas"
+
+# Para cargar los datos se usa
+datos <- read.table(file=enlace, header=T)
+
+# para disponer de las variables de datos como vectores hacemos:
 attach(datos)
+
+# A continuacion una foto del objeto de estudio
+shell.exec("http://www.dscuento.com/circuitos-integrados/")
+
+# -------------------------------------------------------------------------
+# Matriz de correlaciones entre las variables -----------------------------
+# -------------------------------------------------------------------------
+cor(datos)
 
 # -------------------------------------------------------------------------
 # Diagramas de dispersion en 2d -------------------------------------------
 # -------------------------------------------------------------------------
-pairs(datos)
-
-# Mejorando el grafico
-panel.reg <- function (x, y)
-{
-  points(x, y, pch=20)
-  abline(lm(y ~ x), lwd=2, col='dodgerblue2')
-}
-# Funci?n para crear el histograma
-panel.hist <- function(x, ...)
-{
-  usr <- par("usr"); on.exit(par(usr))
-  par(usr = c(usr[1:2], 0, 1.5) )
-  h <- hist(x, plot = FALSE)
-  breaks <- h$breaks; nB <- length(breaks)
-  y <- h$counts; y <- y/max(y)
-  rect(breaks[-nB], 0, breaks[-1], y, col="dodgerblue2", ...)
-}
-# Funci?n para obtener la correlaci?n
-panel.cor <- function(x, y, digits=2, prefix="", cex.cor)
-{
-  usr <- par("usr"); on.exit(par(usr))
-  par(usr = c(0, 1, 0, 1))
-  r <- cor(x, y)
-  txt <- format(c(r, 0.123456789), digits=digits)[1]
-  txt <- paste(prefix, txt, sep="")
-  if(missing(cex.cor)) cex <- 0.8/strwidth(txt)
-  text(0.5, 0.5, txt, cex = cex * abs(r))
-}
-
-pairs(datos,
-      upper.panel = panel.reg,
-      diag.panel = panel.hist,
-      lower.panel = panel.cor)
+plot(datos, pch=19, col='blue', cex=1.3, las=1)
 
 # -------------------------------------------------------------------------
 # Diagramas de dispersion en 3d -------------------------------------------
 # -------------------------------------------------------------------------
 
 # FORMA 1 con el paquete scatterplot3d
+install.packages("scatterplot3d", dependencies=TRUE)
 library(scatterplot3d)
-scatterplot3d(x=cantidad, y=distancia, z=tiempo, pch=16, cex.lab=1,
-              highlight.3d=TRUE, type="h",
-              xlab='Cantidad de cajas',
-              ylab='Distancia (pies)',
-              zlab='Tiempo (min)')
+scatterplot3d(x=Length, y=Height, z=Stregth)
+
+# Podemos mejorar la apariencia del diagrama anterior asi:
+scatterplot3d(x=Length, y=Height, z=Stregth, pch=16, cex.lab=1.5,
+              highlight.3d=TRUE, type="h")
 
 # FORMA 2 con el paquete rgl
+install.packages("rgl", dependencies = TRUE)
 library(rgl)
-plot3d(x=cantidad, y=distancia, z=tiempo, type='s', col='pink',
-       xlab='Cantidad',
-       ylab='Distancia (pies)',
-       zlab='Tiempo (min)')
+plot3d(x=Length, y=Height, z=Stregth, type='s', col='pink',
+       main='Mueva con el mouse la figura')
+
 
 # -------------------------------------------------------------------------
 # Ajustando el modelo y agregando el plano --------------------------------
 # -------------------------------------------------------------------------
 
 # Ajustando el modelo de regresion
-mod <- lm(tiempo ~ cantidad + distancia)
+mod <- lm(Stregth ~ Length + Height)
 summary(mod)
 
 # Vamos a agregar el plano de regresion al diagrama de la forma 1
 # Para repetir el diagrama forma 1
-mi_grafico_3d <- scatterplot3d(x=cantidad, y=distancia, z=tiempo, 
+mi_grafico_3d <- scatterplot3d(x=Length, y=Height, z=Stregth, 
                                pch=16, cex.lab=1.5,highlight.3d=TRUE, 
                                type="h", main='Diagrama en 3d')
 # Para agregar el plano usamos la funcion s3d$plane3d( )
 # con argumento modelo ajustado. El resto de argumentos son opcionales
-mi_grafico_3d$plane3d(mod, lty.box="solid", col='blue3')
+mi_grafico_3d$plane3d(mod, lty.box="solid", col='blue', cex=2)
+
+
 
 # -------------------------------------------------------------------------
 # Intervalos de confianza para betas --------------------------------------
@@ -103,6 +85,39 @@ confint(object=mod, parm=betas, level=0.95)
 # Es posible obtener IC con niveles de confianza diferentes
 # modificando el parametro level
 confint(object=mod, parm=betas, level=0.97)
+
+
+# -------------------------------------------------------------------------
+# Pruebas de hipotesis ----------------------------------------------------
+# -------------------------------------------------------------------------
+
+# Para pruebas sobre la significancia de la regresion 
+# y prueba sobre coeficientes individuales se usa la salida del resumen
+summary(mod)
+
+
+# Usando la prueba F parcial para probar
+# Ho: beta_2 = 0 vs Ha: beta_2 dif 0
+mod.redu <- lm(Stregth ~ Length)
+
+# SSt para el modelo completo
+SSt <- sum(Stregth^2) - sum(Stregth)^2 / length(Stregth)
+SSt <- var(Stregth) * (length(Stregth)-1) # otra forma
+# SSres para el modelo completo
+SSres <- sum(residuals(mod)^2)
+  SSR <- SSt - SSres
+# MSRes para el modelo completo
+MSRes <- SSres / (length(Stregth)-2-1)
+
+# SSres para el modelo reducido
+SSres.redu <- sum(residuals(mod.redu)^2)
+  SSR.redu <- SSt - SSres.redu
+
+# Estadistico
+F0 <- ( (SSR - SSR.redu) / 1 ) / MSRes
+# Valor de referencia para comparar
+qf(p=0.05, df1=1, df2=length(Stregth)-3)
+
 
 # -------------------------------------------------------------------------
 # Obtencion de la matriz H ------------------------------------------------
@@ -125,7 +140,7 @@ hmax
 which.max(hii)
 
 # Para crear una tabla que muestre los regresores y su hii hacemos
-cbind(cantidad, distancia, hii=round(hii, 2))
+cbind(Length, Height, hii=round(hii, 2))
 # La funcion round se usa para redondear con los decimales deseados
 
 # Como obtener la matriz X?
@@ -148,33 +163,46 @@ centro <- c(mean(Length), mean(Height))
 centro
 
 # Donde se encuentra el centroide?
-plot(cantidad, distancia, pch=19, cex.lab=1.5)
-points(x=mean(cantidad), y=mean(distancia), pch=20, cex=3, col='blue')
+plot(Length, Height, pch=19,cex.lab=1.5)
+points(x=mean(Length), y=mean(Height), pch=20, cex=3, col='blue')
 
 # Donde se encuentra la nueva observacion?
 points(x=20, y=150, pch=20, cex=3, col='red')
 
 # Donde se encuentra la observacion con hmax?
-points(x=cantidad[9], y=distancia[9], pch=20, cex=3, col='purple')
+points(x=Length[18], y=Height[18], pch=20, cex=3, col='purple')
 
 
 # -------------------------------------------------------------------------
-# Incluyendo interaccion --------------------------------------------------
+# How can I estimate response values --------------------------------------
 # -------------------------------------------------------------------------
-mod2 <- lm(tiempo ~ cantidad * distancia)
-summary(mod2)
 
-fun <- function(x1, x2) sum(coef(mod2) * c(1, x1, x2 + x1 * x2))
-fun <- Vectorize(fun)
-x1 <- seq(from=2, to=30, length.out=10)
-x2 <- seq(from=36, to=1460, length.out=7)
-y <- outer(x1, x2, fun)
+# If you want to obtain the estimated betas you can use
+coef(mod)
 
-# Superficie en 3d
-persp(x1, x2, y, theta=30, phi=30,
-      ticktype = "detailed", nticks=3,
-      col='lightblue', border='blue',
-      xlab='Cantidad', ylab='Distancia (pies)',
-      zlab='Tiempo (min)')
+# To obtain fitted values for y given length and height
+y.ajustados <- coef(mod)[1] + coef(mod)[2] * Length + coef(mod)[3] * Height
 
+# If you want to obtain fitted values for y you can use 
+# fitted() or predict() function
+fitted(mod)   
+predict(mod) # The same results
+
+# Compare
+cbind(Stregth, y.ajustados, fitted(mod), predict(mod))
+
+# How can I obtain interval estimates for confidence and prediction?
+confi <- predict(object=mod, interval = "confidence")
+predi <- predict(object=mod, interval = "prediction")
+cbind(confi, predi)
+
+# How can I estimate y values for a new set of covariates?
+# Suposse you want to estimate y for lengths of 5, 12, 17, 20
+# and heighs of 50, 155, 371, 150
+new.data.set <- data.frame(Length=c(5,12,17,20),
+                           Height=c(50,155,371,150))
+
+predict(object=mod, new=new.data.set)
+
+predict(object=mod, new=new.data.set, se.fit=TRUE)
 
