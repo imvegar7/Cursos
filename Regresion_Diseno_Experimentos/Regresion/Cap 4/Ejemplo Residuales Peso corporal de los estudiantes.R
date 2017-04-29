@@ -137,3 +137,6 @@ summary(mod3)
 mod4 <- lm(Peso ~ circun_cuello, data=datos[-c(8,11,12,13), ])
 summary(mod4)
 #-------------------------------------------------------------------------------
+
+par(mfrow=c(2, 2))
+plot(mod4, pch=19)
