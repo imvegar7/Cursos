@@ -2,9 +2,13 @@ require(MASS) # to load the stepAIC function
 require(MPV) # to load the data
 
 # Excersice 9.5 from MPV
+
+# Usando los datos de la tabla b3 aplicar el proceso de selecci?n de variables
+# para obtener el mejor modelo.
+
 data(table.b3)
-table.b3[22:26,] # Can you see the missing values?
-datis <- table.b3[-c(23,25),]
+table.b3[22:26, ] # Can you see the missing values?
+datis <- table.b3[-c(23,25), ]
 
 # The full model ------------------------------------------------------------
 full.model <- lm(y ~ ., data = datis)
@@ -24,7 +28,7 @@ summary(modback)
 
 # forward selection ------------------------------------------------------
 empty.model <- lm(y ~ 1, data = datis)
-horizonte <- formula( lm(y ~ ., data = datis) )
+horizonte <- formula(lm(y ~ ., data = datis))
 horizonte
 modforw <- stepAIC(empty.model, trace=FALSE, direction="forward",
                    scope=horizonte)
@@ -39,7 +43,7 @@ coef(modforw)
 AIC(modforw)
 
 # In a graphical way -----------------------------------------------------
-par(mfrow=c(1,2))
+par(mfrow=c(1, 2))
 require(car)
 qqPlot(modback, main="Backward", pch=19)
 qqPlot(modforw, main="Forward", pch=19)
