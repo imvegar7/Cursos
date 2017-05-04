@@ -167,7 +167,7 @@ summary(mod2)
 fun <- function(x1, x2) sum(coef(mod2) * c(1, x1, x2 + x1 * x2))
 fun <- Vectorize(fun)
 x1 <- seq(from=2, to=30, length.out=10)
-x2 <- seq(from=36, to=1460, length.out=7)
+x2 <- seq(from=36, to=1460, length.out=10)
 y <- outer(x1, x2, fun)
 
 # Superficie en 3d
