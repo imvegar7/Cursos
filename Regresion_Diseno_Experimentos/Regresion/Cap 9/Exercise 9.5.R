@@ -19,7 +19,7 @@ length(coef(full.model))            # Number of betas
 logLik(full.model)                  # logLik with 13 df
 -2 * logLik(full.model) + 2 * 13    # AIC manually
 AIC(full.model, k=2)                # AIC automatically
-AIC(full.model, k=log(30))               # BIC automatically
+AIC(full.model, k=log(30))          # BIC automatically
 
 # backward selection ------------------------------------------------------
 modback <- stepAIC(full.model, trace=TRUE, direction="backward")
