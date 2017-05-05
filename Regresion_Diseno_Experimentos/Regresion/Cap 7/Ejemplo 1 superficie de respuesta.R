@@ -16,8 +16,8 @@ scatterplot3d(x=temp, y=conc, z=rend, pch=16, cex.lab=1.5,
 # Dibujo en 3d
 require(rgl)
 
-plot3d(x=temp, y=conc, z=rend, size=10, lwd=2,
-       xlab='Temperatura', ylab='Concentracion', 
+plot3d(x=temp, y=conc, z=rend, lwd=2, col='orange',
+       xlab='Temperatura', ylab='Concentracion', type='s',
        zlab='Rendimiento')
 
 # Modelo polinomial ajustado

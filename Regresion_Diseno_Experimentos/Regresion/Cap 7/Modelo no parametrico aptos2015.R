@@ -1,5 +1,5 @@
 
-file <- 'https://raw.githubusercontent.com/fhernanb/datos/master/aptos2015.txt'
+file <- 'https://raw.githubusercontent.com/fhernanb/datos/master/aptos2015'
 datos <- read.table(file=file, header=TRUE)
 head(datos)
 
