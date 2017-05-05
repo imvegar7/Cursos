@@ -62,7 +62,8 @@ lambda
 #----------------------------------------------------------------------
 # Ajustando el modelo transformado
 #----------------------------------------------------------------------
-mod2 <- lm(kWh ^ lambda ~ kW)
+y.transf <- kWh ^ lambda
+plot(x=kW, y=y.transf, pch=19)
+mod2 <- lm(y.transf ~ kW)
 summary(mod2)
-
 
